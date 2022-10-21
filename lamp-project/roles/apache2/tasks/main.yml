@@ -1,0 +1,60 @@
+---
+- name: install apache
+  ansible.builtin.apt:
+    name: apache2
+    state: present
+    update_cache: yes
+
+- name: install PHP apache module
+  ansible.builtin.apt:
+    name: libapache2-mod-php
+    state: present
+    update_cache: yes
+
+- name: install PHP apache module
+  ansible.builtin.apt:
+    name: php-mysql
+    state: present
+    update_cache: yes
+
+- name: create conf folder
+  ansible.builtin.file:
+    path: /etc/apache2/sites-available
+    state: directory
+    mode: '0755'
+
+- name: create html folder
+  ansible.builtin.file:
+    path: /var/www/lamp
+    state: directory
+    mode: '0755'
+
+- name: copy apache conf file
+  ansible.builtin.copy:
+    dest: /etc/apache2/sites-available/lamp.conf
+    src: lamp.conf
+    mode: '0755'
+
+- name: create /var/www/lamp
+  ansible.builtin.copy:
+    dest: /var/www/lamp/index.php
+    src: index.php
+    mode: '0755'
+
+- name: start apache
+  ansible.builtin.service:
+    name: apache2
+    state: started
+    enabled: yes
+
+- name: a2ensite
+  ansible.builtin.shell: sudo a2ensite lamp
+
+- name: a2dssite
+  ansible.builtin.shell: sudo a2dissite 000-default
+
+- name: apache2ctl
+  ansible.builtin.shell: sudo apache2ctl configtest
+
+- name: reload apache2ctl
+  ansible.builtin.shell: sudo systemctl reload apache2

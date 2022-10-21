@@ -1,0 +1,10 @@
+---
+# A playbook
+- name: Init playbook
+  hosts: lamp.garr.academy
+  remote_user: vagrant
+  become: yes
+
+  roles:
+    - mysql
+    - apache2

@@ -1,0 +1,60 @@
+---
+- name: install mysql
+  ansible.builtin.apt:
+    name: default-mysql-server
+    state: present
+    update_cache: yes
+
+- name: install pymysql
+  ansible.builtin.apt:
+    name: python3-pymysql
+    state: present
+
+- name: Sets the root password
+  community.mysql.mysql_user:
+    name: root
+    password: root
+    login_unix_socket: /var/run/mysqld/mysqld.sock
+
+- name: Copy .my.cnf for easier mysql automation
+  blockinfile:
+    path: ~/.my.cnf
+    create: yes
+    block: |
+      [client]
+      user=root
+      password=root
+
+- name: Removes test database
+  no_log: true
+  community.mysql.mysql_db:
+    name: test
+    state: absent
+
+- name: Create lampdb
+  mysql_db:
+    name: lampdb
+    state: present
+
+# ADD A WHEN HERE, DOESNT NEED TO BE REPEATED EVERY TIME
+- name: Create team table
+  community.mysql.mysql_query:
+    login_db: lampdb
+    query: CREATE TABLE Teammate (teammateID int,firstname varchar(255),email varchar(255),color varchar(255),age varchar(255));
+
+# ADD A WHEN HERE, DOESNT NEED TO BE REPEATED EVERY TIME
+- name: Insert in team table
+  community.mysql.mysql_query:
+    login_db: lampdb
+    query: 
+    - INSERT INTO Teammate (teammateID, firstname, email, color, age) VALUES (1, 'alfredo', 'alfredo@email.com', 'blu', 24)
+    - INSERT INTO Teammate (teammateID, firstname, email, color, age) VALUES (2, 'lorenzo', 'lorenzo@email.com', 'rosso', 22)
+    - INSERT INTO Teammate (teammateID, firstname, email, color, age) VALUES (3, 'filippo', 'filippo@email.com', 'giallo', 26)
+    #- "INSERT INTO Teammate (teammateID, lastname, firstname, email, color, age) VALUES ({{ item['id'] }}, {{ item['lastname'] }}, {{ item['firstname'] }}, {{ item['email'] }}, {{ item['colore'] }}, {{ item['age'] }})"
+    single_transaction: yes
+  #loop:
+  # - {id: "1", firstname: "alfredo", lastname: "", email: "@gmail.com", colore: "giallo", age: "24"}
+  # - {id: "2", firstname: "lorenzo", lastname: "", email: "@gmail.com", colore: "blu", age: "22"}
+  # - {id: "3", firstname: "filippo", lastname: "", email: "@gmail.com", colore: "rosso", age: "26"}
+
+
