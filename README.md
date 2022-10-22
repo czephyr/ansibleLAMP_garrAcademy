@@ -39,4 +39,3 @@ The file `lamp-playbook.yml` will be used to begin the Ansible routine defined b
 To start the playbook
  ```sh
     ansible-playbook lamp-playbook.yml
-    ```
