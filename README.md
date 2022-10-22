@@ -1,7 +1,7 @@
 <!-- ABOUT THE PROJECT -->
 ## Ansible built LAMP stack
 
-Exercise developed during the [https://www.garr.it/it/news-e-eventi/comunicati/2053-competenze-hi-tech-in-italia-al-via-la-garr-academy](GARR Academy) as an introduction to working with Ansible. 
+Exercise developed during the [GARR Academy](https://www.garr.it/it/news-e-eventi/comunicati/2053-competenze-hi-tech-in-italia-al-via-la-garr-academy) as an introduction to working with Ansible. 
 
 ### About the code
 
